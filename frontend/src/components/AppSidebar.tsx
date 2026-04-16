@@ -20,6 +20,7 @@ import {
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useEffect, useRef } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -103,6 +104,14 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const { user, signOut, isAdmin } = useAuth();
+  const sidebarContentRef = useRef<HTMLDivElement>(null);
+
+  // Reset sidebar scroll to top on navigation
+  useEffect(() => {
+    if (sidebarContentRef.current) {
+      sidebarContentRef.current.scrollTop = 0;
+    }
+  }, [location.pathname]);
 
   const visibleGroups = navGroups
     .filter((g) => !g.adminOnly || isAdmin)
@@ -150,7 +159,7 @@ export function AppSidebar() {
         )}
       </div>
 
-      <SidebarContent className="pt-3 pb-2 overflow-y-auto scrollbar-thin">
+      <SidebarContent ref={sidebarContentRef} className="pt-3 pb-2 overflow-y-auto scrollbar-thin">
         {visibleGroups.map((group) => (
           <div key={group.label} className="mb-1">
             {!collapsed && (

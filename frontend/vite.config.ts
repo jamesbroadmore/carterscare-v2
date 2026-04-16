@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => ({
     outDir: "dist",
     sourcemap: false,
     minify: "esbuild",
-    chunkSizeWarningLimit: 600,
+    chunkSizeWarningLimit: 250,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -27,9 +27,14 @@ export default defineConfig(({ mode }) => ({
           supabase: ["@supabase/supabase-js"],
           motion: ["framer-motion"],
           query: ["@tanstack/react-query"],
+          sonner: ["sonner"],
         },
       },
     },
+    // Enable gzip compression
+    reportCompressedSize: true,
+    // Increase inline limit for critical assets
+    assetsInlineLimit: 4096,
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
