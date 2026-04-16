@@ -3,7 +3,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckCircle2, Circle, ChevronRight, ChevronLeft, Heart, Shield,
-  Monitor, ClipboardCheck, Sparkles, Loader2, FileText, Eye,
+  Monitor, ClipboardCheck, Sparkles, Loader2, FileText, Eye, User,
 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -175,10 +175,33 @@ function SectionCard({ title, children }: { title: string; children: React.React
 }
 
 function WelcomeStep() {
+  const { user } = useAuth();
+  
+  const initials = user?.user_metadata?.display_name
+    ? user.user_metadata.display_name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
+    : user?.email?.slice(0, 2).toUpperCase() ?? "??";
+  
+  const displayName = user?.user_metadata?.display_name || user?.email?.split("@")[0] || "User";
+  
   return (
     <div className="space-y-4">
       <div className="rounded-xl bg-card p-8 shadow-card border border-border/50 text-center space-y-4">
         <img src={cartersLogo} alt="Carters Care Group" className="h-16 mx-auto" />
+        
+        {/* User Avatar / Photo Section */}
+        <div className="flex flex-col items-center gap-3 py-4">
+          <div
+            className="h-20 w-20 rounded-full flex items-center justify-center text-white text-lg font-bold shadow-md"
+            style={{ background: "linear-gradient(135deg, #a78bfa, #8b5cf6)" }}
+          >
+            {initials}
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-card-foreground">Welcome, {displayName}!</h3>
+            <p className="text-xs text-muted-foreground">Let&apos;s get you set up</p>
+          </div>
+        </div>
+        
         <h2 className="text-xl font-bold text-card-foreground">Welcome to Carters Care Group</h2>
         <p className="text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed">
           We're thrilled to have you join our team. At Carters Care Group, we are dedicated to providing exceptional support to our NDIS and Aged Care clients across the community.
