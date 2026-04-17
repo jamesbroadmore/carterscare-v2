@@ -7,7 +7,6 @@ import { useState, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-import cartersIcon from "@/assets/icon.png";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface AppLayoutProps {

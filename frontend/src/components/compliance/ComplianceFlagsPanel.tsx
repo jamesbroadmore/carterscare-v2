@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { AlertTriangle, CheckCircle, Info, Shield, X } from "lucide-react";
+import { AlertTriangle, Info, Shield, X } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 

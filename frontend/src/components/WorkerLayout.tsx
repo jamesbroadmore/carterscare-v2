@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { ElementType } from "react";
 import {
   Home, UserCircle, CalendarDays, MapPinCheck, FileText,
   ChevronLeft, LogOut,
@@ -8,7 +9,7 @@ import cartersIcon from "@/assets/icon.png";
 
 export type WorkerNavTab = "home" | "clients" | "roster" | "checkin" | "notes";
 
-const NAV_ITEMS: { tab: WorkerNavTab; icon: any; label: string; path: string }[] = [
+const NAV_ITEMS: { tab: WorkerNavTab; icon: ElementType; label: string; path: string }[] = [
   { tab: "home",    icon: Home,        label: "Home",     path: "/worker" },
   { tab: "clients", icon: UserCircle,  label: "Clients",  path: "/clients" },
   { tab: "roster",  icon: CalendarDays,label: "Roster",   path: "/roster" },
@@ -23,7 +24,7 @@ function BottomNavItem({
   onClick,
   badge,
 }: {
-  icon: any;
+  icon: ElementType;
   label: string;
   active: boolean;
   onClick: () => void;

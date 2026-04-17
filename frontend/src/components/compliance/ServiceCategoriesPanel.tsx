@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Loader2, Pencil, X } from "lucide-react";
+import { Plus, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 
 const PROGRAMS = [
@@ -14,7 +14,6 @@ export function ServiceCategoriesPanel() {
   const queryClient = useQueryClient();
   const [programFilter, setProgramFilter] = useState("ndis");
   const [showAdd, setShowAdd] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
 
   const { data: categories = [], isLoading } = useQuery({
     queryKey: ["service-categories", programFilter],

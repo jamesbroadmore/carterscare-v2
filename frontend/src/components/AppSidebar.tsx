@@ -28,7 +28,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import cartersIcon from "@/assets/icon.png";
-import cartersLogo from "@/assets/Carters-Logo.png";
 
 type NavItem = {
   title: string;
