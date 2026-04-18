@@ -11,11 +11,10 @@ const PROGRAMS = [
 ];
 
 export function ServiceCategoriesPanel() {
-  const queryClient = useQueryClient();
   const [programFilter, setProgramFilter] = useState("ndis");
   const [showAdd, setShowAdd] = useState(false);
 
-  const { data: categories = [], isLoading } = useQuery({
+  const { data: categories = [] } = useQuery({
     queryKey: ["service-categories", programFilter],
     queryFn: async () => {
       const { data, error } = await supabase

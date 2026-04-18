@@ -18,10 +18,9 @@ const SEVERITY_ICONS: Record<string, any> = {
 };
 
 export function ComplianceFlagsPanel() {
-  const queryClient = useQueryClient();
   const [statusFilter, setStatusFilter] = useState<string>("open");
 
-  const { data: flags = [], isLoading } = useQuery({
+  const { data: flags = [] } = useQuery({
     queryKey: ["compliance-flags", statusFilter],
     queryFn: async () => {
       let query = supabase

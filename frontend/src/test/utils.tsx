@@ -25,7 +25,7 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, "wrapper"> {
 export function renderWithProviders(
   ui: React.ReactElement,
   {
-    initialEntries = ["/"],
+    _initialEntries = ["/"],
     ...renderOptions
   }: ExtendedRenderOptions = {}
 ) {
@@ -81,7 +81,7 @@ export const createMockClient = (overrides = {}) => ({
  */
 
 export const mockSupabaseClient = {
-  from: (table: string) => ({
+  from: (_table: string) => ({
     select: () => ({
       eq: () => ({
         single: vi.fn().mockResolvedValue({ data: null, error: null }),

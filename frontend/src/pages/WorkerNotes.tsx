@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useRef, useMemo } from "react";
 import { WorkerLayout } from "@/components/WorkerLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -7,9 +7,9 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus, FileText, Search, X, Loader2, Lock,
-  ChevronRight, AlertTriangle, Clock, User,
+  ChevronRight,
 } from "lucide-react";
-import { format, formatDistanceToNow, isToday, isYesterday } from "date-fns";
+import { format, isToday, isYesterday } from "date-fns";
 import { fullName } from "@/lib/display-names";
 
 // ─── Category config ───────────────────────────────────────────────────────────
