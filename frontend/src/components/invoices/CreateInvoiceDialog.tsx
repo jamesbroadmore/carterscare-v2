@@ -14,15 +14,14 @@ interface Props {
   onClose: () => void;
 }
 
-export function CreateInvoiceDialog({ open, onClose }: Props) {
+export function CreateInvoiceDialog({ _open, onClose }: Props) {
   const { user } = useAuth();
-  const queryClient = useQueryClient();
   const [abn, setAbn] = useState("");
   const [selectedTimesheets, setSelectedTimesheets] = useState<Set<string>>(new Set());
   const [rate, setRate] = useState("38");
   const [notes, setNotes] = useState("");
   const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
-  const [isValidating, setIsValidating] = useState(false);
+  const [_isValidating, setIsValidating] = useState(false);
   const [validationRun, setValidationRun] = useState(false);
 
   const { data: profile } = useQuery({

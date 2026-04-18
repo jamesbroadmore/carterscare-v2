@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { AppLayout } from "@/components/AppLayout";
-import { AlertTriangle, CheckCircle, XCircle, Loader2, Plus, X, Search, Shield, List, BarChart3 } from "lucide-react";
+import { AlertTriangle, XCircle, Loader2, Plus, X, Search, Shield, List } from "lucide-react";
 import { motion } from "framer-motion";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";

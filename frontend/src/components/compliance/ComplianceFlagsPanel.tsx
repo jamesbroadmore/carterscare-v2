@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { AlertTriangle, CheckCircle, Info, Shield, X } from "lucide-react";
+import { AlertTriangle, Info, Shield, X } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
@@ -18,10 +18,9 @@ const SEVERITY_ICONS: Record<string, any> = {
 };
 
 export function ComplianceFlagsPanel() {
-  const queryClient = useQueryClient();
   const [statusFilter, setStatusFilter] = useState<string>("open");
 
-  const { data: flags = [], isLoading } = useQuery({
+  const { data: flags = [] } = useQuery({
     queryKey: ["compliance-flags", statusFilter],
     queryFn: async () => {
       let query = supabase

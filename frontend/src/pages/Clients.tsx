@@ -1,8 +1,8 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { AppLayout } from "@/components/AppLayout";
-import { Plus, MoreHorizontal, Loader2, Pencil, Trash2, UserCircle, Users } from "lucide-react";
+import { Plus, MoreHorizontal, Loader2, Pencil, Trash2, UserCircle } from "lucide-react";
 import { motion } from "framer-motion";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AddClientDialog } from "@/components/AddClientDialog";
 import { EditClientDialog } from "@/components/EditClientDialog";

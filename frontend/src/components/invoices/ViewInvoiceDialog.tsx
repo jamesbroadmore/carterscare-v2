@@ -13,7 +13,7 @@ interface Props {
   onStatusChange: (status: string) => void;
 }
 
-export function ViewInvoiceDialog({ open, onClose, invoiceId, isAdmin, onStatusChange }: Props) {
+export function ViewInvoiceDialog({ _open, onClose, invoiceId, _isAdmin, _onStatusChange }: Props) {
   const printRef = useRef<HTMLDivElement>(null);
 
   const { data: invoice, isLoading } = useQuery({

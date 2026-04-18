@@ -1,4 +1,5 @@
-import { CheckCircle, XCircle, AlertTriangle, Shield } from "lucide-react";
+import { ElementType } from "react";
+import { CheckCircle, XCircle, AlertTriangle } from "lucide-react";
 import type { ValidationResult } from "@/lib/billing-validation";
 
 interface Props {
@@ -6,7 +7,7 @@ interface Props {
   isRunning?: boolean;
 }
 
-const ICONS: Record<string, any> = {
+const ICONS: Record<string, ElementType> = {
   passed: CheckCircle,
   failed: XCircle,
   warning: AlertTriangle,

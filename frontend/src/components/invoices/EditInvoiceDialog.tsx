@@ -25,9 +25,8 @@ interface LineItem {
   isNew?: boolean;
 }
 
-export function EditInvoiceDialog({ open, onClose, invoiceId }: Props) {
+export function EditInvoiceDialog({ _open, onClose, invoiceId }: Props) {
   const { user } = useAuth();
-  const queryClient = useQueryClient();
   const [abn, setAbn] = useState("");
   const [notes, setNotes] = useState("");
   const [lineItems, setLineItems] = useState<LineItem[]>([]);

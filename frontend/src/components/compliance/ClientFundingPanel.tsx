@@ -1,20 +1,19 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Loader2, X, DollarSign } from "lucide-react";
+import { Plus, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
 interface Props {
   clientId: string;
-  clientName: string;
 }
 
-export function ClientFundingPanel({ clientId, clientName }: Props) {
+export function ClientFundingPanel({ clientId }: Props) {
   const queryClient = useQueryClient();
   const [showAdd, setShowAdd] = useState(false);
 
-  const { data: funding = [], isLoading } = useQuery({
+  const { data: funding = [] } = useQuery({
     queryKey: ["client-funding", clientId],
     queryFn: async () => {
       const { data, error } = await supabase

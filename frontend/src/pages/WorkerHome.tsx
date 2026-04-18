@@ -1,27 +1,22 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate, useLocation } from "react-router-dom";
-import { getPerthGreeting, getPerthDate, formatPerthTime } from "@/lib/perth-time";
+import { useNavigate } from "react-router-dom";
+import { getPerthGreeting, getPerthDate } from "@/lib/perth-time";
 import {
   Home,
-  Users,
   CalendarDays,
-  Bell,
   UserCircle,
   ChevronRight,
-  Clock,
   CheckCircle2,
   Circle,
-  MessageSquare,
   LogOut,
   FileText,
   ShieldCheck,
   MapPinCheck,
 } from "lucide-react";
-import { toast } from "sonner";
 import cartersIcon from "@/assets/icon.png";
 
 // Flower/pinwheel SVG logo component
@@ -80,7 +75,7 @@ function TaskItem({
 }: {
   label: string;
   done: boolean;
-  icon?: any;
+  _icon?: any;
 }) {
   const [checked, setChecked] = useState(done);
   return (

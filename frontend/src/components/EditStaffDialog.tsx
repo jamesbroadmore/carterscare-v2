@@ -105,12 +105,7 @@ export function EditStaffDialog({ open, onClose, staff }: EditStaffDialogProps) 
       setNewPassword("");
       setNewSystemRole(linkedUser?.role || "user");
     }
-  }, [staff]);
-
-  // Update newSystemRole when linkedUser loads
-  useEffect(() => {
-    if (linkedUser?.role) setNewSystemRole(linkedUser.role);
-  }, [linkedUser]);
+  }, [staff, linkedUser?.role]);
 
   const mutation = useMutation({
     mutationFn: async (data: StaffForm) => {

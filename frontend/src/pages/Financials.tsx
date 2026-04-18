@@ -1,6 +1,6 @@
 import { AppLayout } from "@/components/AppLayout";
 import { MetricCard } from "@/components/MetricCard";
-import { DollarSign, TrendingUp, Users, Percent, BarChart3, Receipt, Clock, FileText } from "lucide-react";
+import { DollarSign, TrendingUp, Users, Receipt } from "lucide-react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
