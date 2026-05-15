@@ -52,21 +52,35 @@ export default function Clients() {
 
   const { data: clientsData = [], isLoading } = useQuery({
     queryKey: ["clients"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const { data, error } = await supabase.from("clients").select("*").order("first_name");
-      if (error) throw error;
-      return data;
+      if (!supabase) return [];
+      try {
+        const { data, error } = await supabase.from("clients").select("*").order("first_name");
+        if (error) throw error;
+        return data || [];
+      } catch (err) {
+        console.error("[Clients] Failed to fetch clients:", err);
+        return [];
+      }
     },
   });
 
   const { data: assignments = [] } = useQuery({
     queryKey: ["client-staff-assignments"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("client_staff_assignments")
-        .select("client_id, staff_id, staff:staff_id(id, first_name, last_name, preferred_name)");
-      if (error) throw error;
-      return data;
+      if (!supabase) return [];
+      try {
+        const { data, error } = await supabase
+          .from("client_staff_assignments")
+          .select("client_id, staff_id, staff:staff_id(id, first_name, last_name, preferred_name)");
+        if (error) throw error;
+        return data || [];
+      } catch (err) {
+        console.error("[Clients] Failed to fetch assignments:", err);
+        return [];
+      }
     },
   });
 
@@ -81,6 +95,7 @@ export default function Clients() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
+      if (!supabase) throw new Error("Supabase is not initialized");
       const { error } = await supabase.from("clients").delete().eq("id", id);
       if (error) throw error;
     },

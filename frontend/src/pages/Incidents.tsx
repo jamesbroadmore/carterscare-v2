@@ -40,14 +40,21 @@ export default function Incidents() {
 
   const { data: incidents = [], isLoading } = useQuery({
     queryKey: ["incidents"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("incidents")
-        .select("*, reporter:reported_by(first_name, last_name, preferred_name), client:client_id(first_name, last_name, preferred_name)")
-        .order("incident_date", { ascending: false })
-        .limit(50);
-      if (error) throw error;
-      return data;
+      if (!supabase) return [];
+      try {
+        const { data, error } = await supabase
+          .from("incidents")
+          .select("*, reporter:reported_by(first_name, last_name, preferred_name), client:client_id(first_name, last_name, preferred_name)")
+          .order("incident_date", { ascending: false })
+          .limit(50);
+        if (error) throw error;
+        return data || [];
+      } catch (err) {
+        console.error("[Incidents] Failed to fetch incidents:", err);
+        return [];
+      }
     },
   });
 

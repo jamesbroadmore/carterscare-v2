@@ -41,14 +41,21 @@ export default function CaseNotes() {
 
   const { data: notes = [], isLoading } = useQuery({
     queryKey: ["case-notes"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("case_notes")
-        .select("*, staff:staff_id(first_name, last_name, preferred_name), client:client_id(first_name, last_name, preferred_name)")
-        .order("note_date", { ascending: false })
-        .limit(100);
-      if (error) throw error;
-      return data;
+      if (!supabase) return [];
+      try {
+        const { data, error } = await supabase
+          .from("case_notes")
+          .select("*, staff:staff_id(first_name, last_name, preferred_name), client:client_id(first_name, last_name, preferred_name)")
+          .order("note_date", { ascending: false })
+          .limit(100);
+        if (error) throw error;
+        return data || [];
+      } catch (err) {
+        console.error("[CaseNotes] Failed to fetch notes:", err);
+        return [];
+      }
     },
   });
 

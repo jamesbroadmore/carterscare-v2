@@ -76,93 +76,155 @@ export default function Dashboard() {
 
   const { data: greeting } = useQuery({
     queryKey: ["dashboard-greeting", user?.id],
-    enabled: !!user,
+    enabled: !!user && !!supabase,
     queryFn: async () => {
-      const { data: profile } = await supabase
-        .from("profiles").select("display_name, staff_id").eq("user_id", user!.id).single();
-      if (profile?.staff_id) {
-        const { data: staff } = await supabase.from("staff").select("preferred_name, first_name").eq("id", profile.staff_id).single();
-        if (staff?.preferred_name) return staff.preferred_name;
-        if (staff?.first_name) return staff.first_name;
+      if (!supabase) return "there";
+      try {
+        const { data: profile } = await supabase
+          .from("profiles").select("display_name, staff_id").eq("user_id", user!.id).single();
+        if (profile?.staff_id) {
+          const { data: staff } = await supabase.from("staff").select("preferred_name, first_name").eq("id", profile.staff_id).single();
+          if (staff?.preferred_name) return staff.preferred_name;
+          if (staff?.first_name) return staff.first_name;
+        }
+        return profile?.display_name || user!.email?.split("@")[0] || "there";
+      } catch (err) {
+        console.error("[Dashboard] Failed to fetch greeting:", err);
+        return user?.email?.split("@")[0] || "there";
       }
-      return profile?.display_name || user!.email?.split("@")[0] || "there";
     },
   });
 
   const { data: staffCount = 0 } = useQuery({
     queryKey: ["dashboard-staff-count"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const { count } = await supabase.from("staff").select("*", { count: "exact", head: true }).eq("status", "active");
-      return count ?? 0;
+      if (!supabase) return 0;
+      try {
+        const { count } = await supabase.from("staff").select("*", { count: "exact", head: true }).eq("status", "active");
+        return count ?? 0;
+      } catch (err) {
+        console.error("[Dashboard] Failed to fetch staff count:", err);
+        return 0;
+      }
     },
   });
 
   const { data: clientCount = 0 } = useQuery({
     queryKey: ["dashboard-client-count"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const { count } = await supabase.from("clients").select("*", { count: "exact", head: true }).eq("status", "active");
-      return count ?? 0;
+      if (!supabase) return 0;
+      try {
+        const { count } = await supabase.from("clients").select("*", { count: "exact", head: true }).eq("status", "active");
+        return count ?? 0;
+      } catch (err) {
+        console.error("[Dashboard] Failed to fetch client count:", err);
+        return 0;
+      }
     },
   });
 
   const { data: todayCheckins = 0 } = useQuery({
     queryKey: ["dashboard-checkins-today"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const today = getPerthDate();
-      const { count } = await supabase.from("shift_checkins").select("*", { count: "exact", head: true }).eq("shift_date", today);
-      return count ?? 0;
+      if (!supabase) return 0;
+      try {
+        const today = getPerthDate();
+        const { count } = await supabase.from("shift_checkins").select("*", { count: "exact", head: true }).eq("shift_date", today);
+        return count ?? 0;
+      } catch (err) {
+        console.error("[Dashboard] Failed to fetch checkins:", err);
+        return 0;
+      }
     },
   });
 
   const { data: openIncidents = 0 } = useQuery({
     queryKey: ["dashboard-incidents"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const { count } = await supabase.from("incidents").select("*", { count: "exact", head: true }).in("status", ["open", "investigating"]);
-      return count ?? 0;
+      if (!supabase) return 0;
+      try {
+        const { count } = await supabase.from("incidents").select("*", { count: "exact", head: true }).in("status", ["open", "investigating"]);
+        return count ?? 0;
+      } catch (err) {
+        console.error("[Dashboard] Failed to fetch incidents:", err);
+        return 0;
+      }
     },
   });
 
   const { data: complianceAlerts = 0 } = useQuery({
     queryKey: ["dashboard-compliance-alerts"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const { count } = await supabase.from("compliance_records").select("*", { count: "exact", head: true }).in("status", ["expiring_soon", "expired"]);
-      return count ?? 0;
+      if (!supabase) return 0;
+      try {
+        const { count } = await supabase.from("compliance_records").select("*", { count: "exact", head: true }).in("status", ["expiring_soon", "expired"]);
+        return count ?? 0;
+      } catch (err) {
+        console.error("[Dashboard] Failed to fetch compliance alerts:", err);
+        return 0;
+      }
     },
   });
 
   const { data: todayNotes = 0 } = useQuery({
     queryKey: ["dashboard-notes-today"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const today = getPerthDate();
-      const { count } = await supabase.from("case_notes").select("*", { count: "exact", head: true }).gte("note_date", `${today}T00:00:00`).lte("note_date", `${today}T23:59:59`);
-      return count ?? 0;
+      if (!supabase) return 0;
+      try {
+        const today = getPerthDate();
+        const { count } = await supabase.from("case_notes").select("*", { count: "exact", head: true }).gte("note_date", `${today}T00:00:00`).lte("note_date", `${today}T23:59:59`);
+        return count ?? 0;
+      } catch (err) {
+        console.error("[Dashboard] Failed to fetch notes:", err);
+        return 0;
+      }
     },
   });
 
   const { data: recentCheckins = [], isLoading: checkinsLoading } = useQuery({
     queryKey: ["dashboard-recent-checkins"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const { data } = await supabase
-        .from("shift_checkins")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(6);
-      return data ?? [];
+      if (!supabase) return [];
+      try {
+        const { data } = await supabase
+          .from("shift_checkins")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(6);
+        return data ?? [];
+      } catch (err) {
+        console.error("[Dashboard] Failed to fetch recent checkins:", err);
+        return [];
+      }
     },
   });
 
   const { data: upcomingShifts = [], isLoading: shiftsLoading } = useQuery({
     queryKey: ["dashboard-upcoming-shifts"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const today = getPerthDate();
-      const { data } = await supabase
-        .from("timesheets")
-        .select("*, staff:staff_id(first_name, last_name, preferred_name), client:client_id(first_name, last_name)")
-        .gte("shift_date", today)
-        .order("shift_date")
-        .order("start_time")
-        .limit(5);
-      return data ?? [];
+      if (!supabase) return [];
+      try {
+        const today = getPerthDate();
+        const { data } = await supabase
+          .from("timesheets")
+          .select("*, staff:staff_id(first_name, last_name, preferred_name), client:client_id(first_name, last_name)")
+          .gte("shift_date", today)
+          .order("shift_date")
+          .order("start_time")
+          .limit(5);
+        return data ?? [];
+      } catch (err) {
+        console.error("[Dashboard] Failed to fetch upcoming shifts:", err);
+        return [];
+      }
     },
   });
 

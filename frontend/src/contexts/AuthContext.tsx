@@ -22,15 +22,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [role, setRole] = useState<AppRole | null>(null);
 
   const fetchRole = async (userId: string) => {
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .single();
-    setRole((data?.role as AppRole) ?? "user");
+    if (!supabase) {
+      console.warn("[Auth] Supabase client not initialized");
+      setRole("user");
+      return;
+    }
+    try {
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId)
+        .single();
+      setRole((data?.role as AppRole) ?? "user");
+    } catch (err) {
+      console.error("[Auth] Failed to fetch role:", err);
+      setRole("user");
+    }
   };
 
   useEffect(() => {
+    if (!supabase) {
+      console.warn("[Auth] Supabase client not initialized, skipping auth setup");
+      setLoading(false);
+      return;
+    }
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
@@ -55,11 +71,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    if (!supabase) {
+      throw new Error("Supabase is not initialized. Please configure your environment variables.");
+    }
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
   };
 
   const signOut = async () => {
+    if (!supabase) {
+      throw new Error("Supabase is not initialized. Please configure your environment variables.");
+    }
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
   };

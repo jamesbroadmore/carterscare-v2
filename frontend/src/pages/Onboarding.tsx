@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import cartersLogo from "@/assets/Carters-Logo.png";
+import { useEffect } from "react";
 
 const STEPS = [
   { key: "welcome", label: "Welcome", icon: Heart },
@@ -27,47 +28,70 @@ export default function Onboarding() {
   const { data: staffId } = useQuery({
     queryKey: ["my-staff-id-onboarding", user?.id],
     queryFn: async () => {
-      if (!user) return null;
-      const { data } = await supabase.from("profiles").select("staff_id").eq("user_id", user.id).single();
-      return data?.staff_id || null;
+      if (!user || !supabase) return null;
+      try {
+        const { data } = await supabase.from("profiles").select("staff_id").eq("user_id", user.id).single();
+        return data?.staff_id || null;
+      } catch (err) {
+        console.error("[Onboarding] Failed to fetch staff ID:", err);
+        return null;
+      }
     },
-    enabled: !!user,
+    enabled: !!user && !!supabase,
   });
 
   const { data: tasks = [], isLoading: tasksLoading } = useQuery({
     queryKey: ["onboarding-tasks", staffId],
     queryFn: async () => {
-      if (!staffId) return [];
-      const { data, error } = await supabase.from("onboarding_tasks").select("*").eq("staff_id", staffId).order("created_at");
-      if (error) throw error;
-      return data;
+      if (!staffId || !supabase) return [];
+      try {
+        const { data, error } = await supabase.from("onboarding_tasks").select("*").eq("staff_id", staffId).order("created_at");
+        if (error) throw error;
+        return data || [];
+      } catch (err) {
+        console.error("[Onboarding] Failed to fetch tasks:", err);
+        return [];
+      }
     },
-    enabled: !!staffId,
+    enabled: !!staffId && !!supabase,
   });
 
   const { data: policies = [] } = useQuery({
     queryKey: ["published-policies"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("policies").select("*").eq("status", "published").order("title");
-      if (error) throw error;
-      return data;
+      if (!supabase) return [];
+      try {
+        const { data, error } = await supabase.from("policies").select("*").eq("status", "published").order("title");
+        if (error) throw error;
+        return data || [];
+      } catch (err) {
+        console.error("[Onboarding] Failed to fetch policies:", err);
+        return [];
+      }
     },
+    enabled: !!supabase,
   });
 
   const { data: acknowledgements = [] } = useQuery({
     queryKey: ["my-acknowledgements", staffId],
     queryFn: async () => {
-      if (!staffId) return [];
-      const { data, error } = await supabase.from("policy_acknowledgements").select("policy_id").eq("staff_id", staffId);
-      if (error) throw error;
-      return data.map((a: any) => a.policy_id);
+      if (!staffId || !supabase) return [];
+      try {
+        const { data, error } = await supabase.from("policy_acknowledgements").select("policy_id").eq("staff_id", staffId);
+        if (error) throw error;
+        return data?.map((a: any) => a.policy_id) || [];
+      } catch (err) {
+        console.error("[Onboarding] Failed to fetch acknowledgements:", err);
+        return [];
+      }
     },
-    enabled: !!staffId,
+    enabled: !!staffId && !!supabase,
   });
 
   const acknowledgeMutation = useMutation({
     mutationFn: async (policyId: string) => {
       if (!staffId) throw new Error("No staff record linked");
+      if (!supabase) throw new Error("Supabase is not initialized");
       const { error } = await supabase.from("policy_acknowledgements").insert({
         staff_id: staffId,
         policy_id: policyId,

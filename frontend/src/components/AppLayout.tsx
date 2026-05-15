@@ -44,26 +44,47 @@ export function AppLayout({ children, title }: AppLayoutProps) {
 
   const { data: openIncidents = 0 } = useQuery({
     queryKey: ["notif-incidents"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const { count } = await supabase.from("incidents").select("*", { count: "exact", head: true }).in("status", ["open", "investigating"]);
-      return count ?? 0;
+      if (!supabase) return 0;
+      try {
+        const { count } = await supabase.from("incidents").select("*", { count: "exact", head: true }).in("status", ["open", "investigating"]);
+        return count ?? 0;
+      } catch (err) {
+        console.error("[AppLayout] Failed to fetch incidents:", err);
+        return 0;
+      }
     },
   });
 
   const { data: complianceAlerts = 0 } = useQuery({
     queryKey: ["notif-compliance"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const { count } = await supabase.from("compliance_records").select("*", { count: "exact", head: true }).in("status", ["expiring_soon", "expired"]);
-      return count ?? 0;
+      if (!supabase) return 0;
+      try {
+        const { count } = await supabase.from("compliance_records").select("*", { count: "exact", head: true }).in("status", ["expiring_soon", "expired"]);
+        return count ?? 0;
+      } catch (err) {
+        console.error("[AppLayout] Failed to fetch compliance:", err);
+        return 0;
+      }
     },
   });
 
   const { data: activeCheckins = 0 } = useQuery({
     queryKey: ["notif-checkins"],
+    enabled: !!supabase,
     queryFn: async () => {
-      const today = getPerthDate();
-      const { count } = await supabase.from("shift_checkins").select("*", { count: "exact", head: true }).eq("shift_date", today).eq("status", "checked_in");
-      return count ?? 0;
+      if (!supabase) return 0;
+      try {
+        const today = getPerthDate();
+        const { count } = await supabase.from("shift_checkins").select("*", { count: "exact", head: true }).eq("shift_date", today).eq("status", "checked_in");
+        return count ?? 0;
+      } catch (err) {
+        console.error("[AppLayout] Failed to fetch checkins:", err);
+        return 0;
+      }
     },
   });
 
